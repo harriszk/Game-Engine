@@ -4,7 +4,7 @@ public class Driver {
     public static void main(String args[])
     {
         try {
-            Sprite s;
+            new SceneFrame();
         } catch(Exception e) {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();

@@ -1,6 +1,7 @@
 // Sprite.java
 import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.Color;
 
 public class Sprite extends JPanel {
     // Attributes
@@ -22,7 +23,11 @@ public class Sprite extends JPanel {
     } // end constructor
 
     public void paintComponent(Graphics g){
-
+        g.setColor(new Color(145, 151, 156));
+        g.drawOval(this.position[0], this.position[1], this.size, this.size);
+        this.position[0]++;
+        this.position[1]++;
+        System.out.println("HERE");
     } // end paintComponent
 
     public void setImage()

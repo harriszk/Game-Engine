@@ -1,19 +1,37 @@
 // Scene.java
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.Dimension;
 import java.util.ArrayList;
+import java.lang.Thread;
 
-public class Scene {
+public class Scene extends JPanel {
     // Attributes
-    private int size;
+    private int SCREEN_WIDTH = 640;
+    private int SCREEN_HEIGHT = 480;
     private int position;
     private ArrayList<Sprite> sprites;
     private int frame_rate;
 
-
     // Methods
     public Scene()
     {
-
+        this.setPreferredSize(new Dimension(this.SCREEN_WIDTH, this.SCREEN_HEIGHT));
+        sprites = new ArrayList<Sprite>();
+        sprites.add(new Sprite(this, 10));
     } // end constructor
+
+    public void paintComponent(Graphics g){
+        for (Sprite sprite : sprites) {
+            sprite.paintComponent(g);
+        }
+        this.repaint();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
     public void start()
     {
@@ -39,11 +57,4 @@ public class Scene {
     {
 
     } // end toggleCursor
-
-    public int getMousePosition()
-    {
-        int result = 0;
-
-        return result;
-    } // end getMousePosition
 } // end Scene
