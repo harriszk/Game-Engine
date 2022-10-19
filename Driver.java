@@ -4,7 +4,8 @@ public class Driver {
     public static void main(String args[])
     {
         try {
-            new SceneFrame();
+            Container game = new Container();
+            game.start();
         } catch(Exception e) {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();

@@ -1,7 +1,7 @@
 Driver.class: Driver.java
 	javac Driver.java
 
-run_driver: Driver.class
+run: Driver.class
 	java Driver
 
 clean:
