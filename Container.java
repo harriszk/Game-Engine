@@ -26,6 +26,8 @@ public class Container {
         Scene gameScene = new Scene(this.width, this.height);
         this.frame.add(gameScene);
 
+
+
         //this.frame.setResizable(false);
 
 

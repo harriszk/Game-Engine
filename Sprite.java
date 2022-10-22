@@ -24,8 +24,8 @@ public class Sprite extends JPanel {
     // Attributes
     private int[] size = {0, 0};
     private int[] position = {250, 250};
-    private int image_angle = 0;
-    private int move_angle = 0;
+    private double image_angle = 0;
+    private double move_angle = 0;
     private int speed = 0;
     private int[] velocity = {0, 0};
     private int[] acceleration = {0, 0};
@@ -73,7 +73,7 @@ public class Sprite extends JPanel {
 
     public void draw(Graphics g)
     {
-        update();
+        //update();
         checkBounds();
 
         if(!visible)
@@ -81,7 +81,6 @@ public class Sprite extends JPanel {
             return;
         } // end if
 
-        System.out.println("Drawing the sprite.");
         super.paintComponent(g);
 
         // These coordinates account for where we want the geometric center to be.
@@ -105,9 +104,12 @@ public class Sprite extends JPanel {
         this.position[1] = y;
     }
 
+    // This should be done independently of the frame rate
+    // to ensure that the distance an object travels is the 
+    // same reguardless if there is a faster or slower frame rate.
     public void update()
     {
-        this.position[0] += 3;
+        setPosition(this.position[0] + 1, this.position[1]);
     } // end update
 
     // 
@@ -121,14 +123,14 @@ public class Sprite extends JPanel {
         
     } // end setSpeed
 
-    public void setImageAngle()
+    public void setImageAngle(double theta)
     {
-        
+        this.image_angle = theta;
     } // end setImageAngle
 
-    public void setMoveAngle()
+    public void setMoveAngle(double theta)
     {
-        
+        this.move_angle = theta;   
     } // end setMoveAngle
 
     private void projectVector()
@@ -159,16 +161,27 @@ public class Sprite extends JPanel {
         return true;
     } // end collidesWith
 
-    public int distanceTo(Sprite s)
+    // Computes the 2-norm between two sprites.
+    public double distanceTo(Sprite s)
     {
-        int distance = 0;
+        double distance = 0, sum = 0;
+        int dim = this.position.length;
+
+        for(int i = 0; i < dim; i++)
+        {
+            sum += Math.pow(this.position[i] - s.position[i], 2);
+        } // end for
+        
+        distance = Math.sqrt(sum);
 
         return distance;
     } // end distanceTo
 
-    public int angleTo(Sprite s)
+    // Computes the angle to another sprite relative to the positive x-axis.
+    // Returned value will be in the interval [0, pi]
+    public double angleTo(Sprite s)
     {
-        int angle = -1;
+        double angle = -1;
 
         return angle;
     } // end angleTo
