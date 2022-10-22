@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 
 public class Timeline implements ActionListener {
-    private int IDEALIZE_STEP_SIZE = 30; // per second
+    private int IDEALIZE_STEP_SIZE = 60; // per second
     private int current_step_size;
 
     Scene scene;
@@ -39,7 +39,7 @@ public class Timeline implements ActionListener {
         start = finish;
 
         this.scene.repaint();
-        this.scene.debugger.setText("Total: " + beginning.until(finish, chronounit) + "ms --- dt: " + delta_t + "ms");
+        //this.scene.debugger.setText("Total: " + (float)(beginning.until(finish, chronounit) * 0.001) + "s --- dt: " + delta_t + "ms");
     } // end actionPerformed
 
     public void play()

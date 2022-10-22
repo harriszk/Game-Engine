@@ -9,6 +9,8 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.*;
+import java.awt.event.*;
 
 public class Container {
     private JFrame frame;
@@ -25,6 +27,15 @@ public class Container {
 
         Scene gameScene = new Scene(this.width, this.height);
         this.frame.add(gameScene);
+
+        this.frame.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                Dimension size = frame.getBounds().getSize();
+                width = (int)size.getWidth();
+                height = (int)size.getHeight();
+                gameScene.updateSize(width, height);
+            }
+        });
 
 
 

@@ -25,6 +25,8 @@ public class Scene extends JPanel implements ActionListener {
     // Attributes
     private int SCREEN_WIDTH;
     private int SCREEN_HEIGHT;
+    private int STEP_SIZE = 40;
+    private JSlider zoom;
     private ArrayList<Sprite> sprites;
     private Timeline time;
     boolean on = true;
@@ -57,7 +59,8 @@ public class Scene extends JPanel implements ActionListener {
         this.add(debugger);
         this.add(pause_button);
 
-
+        zoom = new JSlider();
+        this.add(zoom);
 
         //this.setPreferredSize(new Dimension(this.SCREEN_WIDTH, this.SCREEN_HEIGHT));
 
@@ -73,6 +76,7 @@ public class Scene extends JPanel implements ActionListener {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
+        drawCoords(g);
         
 
         /*
@@ -86,8 +90,9 @@ public class Scene extends JPanel implements ActionListener {
         //position += (int)(640 * delta_t * 0.001);
         
         //System.out.println("<" + position + ",50> @ " + (delta_t * 0.001));
-
-        g.drawLine(320, 240, counter % this.SCREEN_WIDTH, 50);
+        int t = (int)(this.SCREEN_WIDTH * time.beginning.until(time.finish, time.chronounit) * 0.001);
+        //System.out.println("t = " + t);
+        g.fillOval(t / 2 % this.SCREEN_WIDTH, t / 2 % this.SCREEN_HEIGHT, 20, 20);
         //g.fillRect(75, this.position, 50, 50);
 
         
@@ -98,6 +103,7 @@ public class Scene extends JPanel implements ActionListener {
     // This is the main game loop
     
     public void actionPerformed(ActionEvent e){
+        System.out.println(e.getActionCommand());
         /*
         counter++;
         
@@ -124,6 +130,55 @@ public class Scene extends JPanel implements ActionListener {
         
     } // end actionPerformed
     
+
+    public void drawCoords(Graphics g)
+    {
+        // This adjusts the zoom, we are just incresing or decreasing the step size
+        this.STEP_SIZE = (int)(40 * ((double)zoom.getValue() / (double)50)) + 10;
+
+        g.setColor(new Color(145, 151, 156));
+
+        // Seeing how many divisions we need to the up and to the left. 
+        // We need to stop drawing somewhere.
+        int stopx = this.SCREEN_WIDTH / (2 * this.STEP_SIZE);
+        int stopy = this.SCREEN_HEIGHT / (2 * this.STEP_SIZE);
+
+        // Below draws the coordinate system (x- and y-axis)
+
+        /* 
+        // This draws the divisions between units
+        for(int i = 1; i <= stopx + 1; i++)
+        {
+            paintMiddle(g, (this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * i), (this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * (i - 1)));
+            paintMiddle(g, (this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * (-1 * i)), (this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * ((-1 * i) + 1)));
+        }
+        */
+        
+        // This draws the unit divisions horizontially and vertically
+        for(int i = 1; i <= stopx; i++)
+        {
+            g.setColor(new Color(90, 94, 97));
+            g.drawLine((this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * i), 0, (this.SCREEN_WIDTH / 2) + (this.STEP_SIZE * i), this.SCREEN_HEIGHT);
+            g.drawLine((this.SCREEN_WIDTH / 2) - (this.STEP_SIZE * i), 0, (this.SCREEN_WIDTH / 2) - (this.STEP_SIZE * i), this.SCREEN_HEIGHT);
+        } // end for
+        
+        for(int i = 1; i <= stopy; i++)
+        {
+            g.drawLine(0, (this.SCREEN_HEIGHT / 2) + (this.STEP_SIZE * i), this.SCREEN_WIDTH, (this.SCREEN_HEIGHT / 2) + (this.STEP_SIZE * i));
+            g.drawLine(0, (this.SCREEN_HEIGHT / 2) - (this.STEP_SIZE * i), this.SCREEN_WIDTH, (this.SCREEN_HEIGHT / 2) - (this.STEP_SIZE * i));
+        } // end for
+        
+        // This is the x- and y-axis
+        g.setColor(Color.BLACK);
+        g.drawLine(0, this.SCREEN_HEIGHT / 2, this.SCREEN_WIDTH, this.SCREEN_HEIGHT / 2);
+        g.drawLine(this.SCREEN_WIDTH / 2, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT);        
+    }
+
+    public void updateSize(int w, int h)
+    {
+        this.SCREEN_WIDTH = w;
+        this.SCREEN_HEIGHT = h;
+    }
 
     public void end()
     {
