@@ -28,14 +28,12 @@ public class Container {
         Scene gameScene = new Scene(this.width, this.height);
         this.frame.add(gameScene);
 
-        this.frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent componentEvent) {
-                Dimension size = frame.getBounds().getSize();
-                width = (int)size.getWidth();
-                height = (int)size.getHeight();
-                gameScene.updateSize(width, height);
-            }
-        });
+        // Listens for a change to the window size
+        Subject s = new Subject();
+
+        this.frame.addComponentListener(s);
+        
+        s.register(gameScene);
 
 
 
@@ -48,6 +46,12 @@ public class Container {
 
     public void start(){
         this.frame.setVisible(true);
+    }
+
+    public void update(Subject s)
+    {
+        this.width = s.getWidth();
+        this.height = s.getHeight();
     }
 
 } // end Container

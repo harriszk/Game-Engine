@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle errors
 
-public class Scene extends JPanel implements ActionListener {
+public class Scene extends JPanel implements ActionListener, Observer {
     // Attributes
     private int SCREEN_WIDTH;
     private int SCREEN_HEIGHT;
@@ -110,8 +110,6 @@ public class Scene extends JPanel implements ActionListener {
         Clock clock = Clock.systemUTC();
         //debugger.setText("UTC time = " + clock.instant());
 
-        updateDeltaTime();
-
         //this.position += 2 * (1000 * delta_t);
         if(this.position > this.SCREEN_HEIGHT)
         {
@@ -174,10 +172,10 @@ public class Scene extends JPanel implements ActionListener {
         g.drawLine(this.SCREEN_WIDTH / 2, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT);        
     }
 
-    public void updateSize(int w, int h)
+    public void update(Subject s)
     {
-        this.SCREEN_WIDTH = w;
-        this.SCREEN_HEIGHT = h;
+        this.SCREEN_WIDTH = s.getWidth();
+        this.SCREEN_HEIGHT = s.getHeight();
     }
 
     public void end()
