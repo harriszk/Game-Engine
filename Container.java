@@ -25,15 +25,15 @@ public class Container {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setLocationRelativeTo(null);
 
-        Scene gameScene = new Scene(this.width, this.height);
-        this.frame.add(gameScene);
-
         // Listens for a change to the window size
         Subject s = new Subject();
-
         this.frame.addComponentListener(s);
         
-        s.register(gameScene);
+        Scene gameScene = new Scene(this.width, this.height, s);
+        this.frame.add(gameScene);
+
+
+        //s.register(gameScene);
 
 
 
