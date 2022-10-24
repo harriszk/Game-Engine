@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 
 public class Timeline implements ActionListener {
-    private int IDEALIZE_STEP_SIZE = 60; // per second
+    private int IDEALIZE_STEP_SIZE = 30; // per second
     private int current_step_size;
 
     Scene scene;

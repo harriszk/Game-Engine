@@ -27,6 +27,7 @@ public class Container {
 
         // Listens for a change to the window size
         Subject s = new Subject();
+        this.frame.addMouseListener(s);
         this.frame.addComponentListener(s);
         
         Scene gameScene = new Scene(this.width, this.height, s);

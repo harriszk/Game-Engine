@@ -113,9 +113,9 @@ public class Scene extends JPanel implements Observer {
         //position += (int)(640 * delta_t * 0.001);
         
         //System.out.println("<" + position + ",50> @ " + (delta_t * 0.001));
-        int t = (int)(640 * time.beginning.until(time.finish, time.chronounit) * 0.001);
+        //int t = (int)(640 * time.beginning.until(time.finish, time.chronounit) * 0.001);
         //System.out.println("t = " + t);
-        g.fillOval(t / 2 % 640, t / 2 % 640, 20, 20);
+        //g.fillOval(t / 2 % 640, t / 2 % 640, 20, 20);
         //g.fillRect(75, this.position, 50, 50);
 
         
