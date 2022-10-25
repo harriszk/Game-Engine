@@ -66,9 +66,9 @@ public class Sprite extends JPanel {
 
     } // end setImage
 
-    public void draw(Graphics g)
+    public void draw(double global_time, Graphics g)
     {
-        //update();
+        update(global_time);
         checkBounds();
 
         if(!visible)
@@ -102,23 +102,37 @@ public class Sprite extends JPanel {
     // This should be done independently of the frame rate
     // to ensure that the distance an object travels is the 
     // same reguardless if there is a faster or slower frame rate.
-    public void update(double dt)
+    public void update(double t)
     {
+        double x, y;
+        double a = 1, b = 0.5, c = 0.75, h = 0, k = 0, r = 2;
         //setPosition(this.position[0] + dt * 0.001, this.position[1] - dt * 0.001);
         // Reference: https://www.physicsforums.com/threads/cool-parametric-equations.863611/
+        // Epicycloid
         // x(t) = (a - b) cos t + c cos ((a/b - 1)t) 
         // y(t) = (a - b) sin t + c sin ((a/b - 1)t)
-    
-        double a = 0, b = 13, c = 6;
+        //double x = ((a - b) * Math.cos(t)) + (c * Math.cos(((a / b) - 1) * t));
+        //double y = ((a - b) * Math.sin(t)) + (c * Math.sin(((a / b) - 1) * t));
+        
 
-        // Circle (y(t) = <sin(t), cos(t)>)
-        // double x = Math.sin(dt % 2 * Math.PI);
-        // double y = Math.cos(dt % 2 * Math.PI);
+        // Ellipse (gamma(t) = <h + asin(t), k + bcos(t)>)
+        x = h + a * Math.sin(t % (2 * Math.PI));
+        y = k + b * Math.cos(t % (2 * Math.PI));
 
-        double x = ((a - b) * Math.cos(dt)) + (c * Math.cos(((a / b) - 1) * dt));
-        double y = ((a - b) * Math.sin(dt)) + (c * Math.sin(((a / b) - 1) * dt));;
+        //double x = r * (t - Math.sin(t));
+        //double y = r * (1 - Math.cos(t));
 
-        setPosition(x, y);
+        // x(t) = (a + b) cost − c cos((a/b + t)t)
+        // y(t) = (a + b)sin t − c sin((a/b + 1)t)
+        //x = ((a + b) * Math.cos(t % (2 * Math.PI))) - (c * Math.cos((((a / b) + t) * t) % (2 * Math.PI)));
+        //y = ((a + b) * Math.sin(t % (2 * Math.PI))) - (c * Math.sin((((a / b) + 1) * t) % (2 * Math.PI)));
+
+       // x = t - (Math.PI / 2) % (2 * Math.PI);
+        //y = (a * Math.sin(t)) % (4 * Math.PI);
+
+
+
+        this.setPosition(x, y);
         //System.out.println(dt + ": <" + this.position[0] + "," + this.position[1] + ">");
     } // end update
 

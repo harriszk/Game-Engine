@@ -70,7 +70,7 @@ public class Scene extends JPanel implements Observer, Recipient {
 
         main_timeline = new Timeline(this);
         
-        coords = new CoordinateSystem(this);
+        coords = new CoordinateSystem(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
 
         subject.register(this);
         subject.register(coords);
@@ -94,6 +94,7 @@ public class Scene extends JPanel implements Observer, Recipient {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
+        // --- BEGIN DRAWING COORDINATE SYSTEM ---
         // Query the coordinate system for where  things should be drawn.
         this.coords.updateDivisions();
 
@@ -137,6 +138,19 @@ public class Scene extends JPanel implements Observer, Recipient {
             drawAxes(i, 1, g);
         } // end for
 
+        /*
+        g.setFont(new Font("Arial", Font.PLAIN, 30)); 
+        g.drawString("" + i, cur_pos_x, this.Y_OFFSET);
+        g.drawString("" + (-1 * i), cur_neg_x, this.Y_OFFSET);
+        */
+
+        // --- END DRAWING COORDINATE SYSTEM ---
+
+        for (Sprite sprite : sprites) 
+        {
+            drawSprite(sprite, g);
+        } // end for
+        
         
         /* 
 
@@ -154,12 +168,6 @@ public class Scene extends JPanel implements Observer, Recipient {
         */
 
 
-        /*
-        for (Sprite sprite : sprites) 
-        {
-            sprite.draw(g);
-        } // end for
-        */
 
         //g.setColor(new Color(0xFF, 0xFF, 0xFF));
         //position += (int)(640 * delta_t * 0.001);
@@ -237,6 +245,16 @@ public class Scene extends JPanel implements Observer, Recipient {
         } // end switch
         g.setColor(Color.BLACK);
     } // end drawDivisionLines
+
+    private void drawSprite(Sprite s, Graphics g)
+    {
+        int x = 0, y = 0;
+        s.update(this.coords.getTime());
+        x = (int)(this.coords.convertPositionX(s.getPosition(0)));
+        y = (int)(this.coords.convertPositionY(s.getPosition(1)));
+        g.setColor(Color.BLUE);
+        g.fillOval(x - 10, y - 10, 20, 20);
+    } // end drawSprite
 
     public void update(Subject s)
     {
