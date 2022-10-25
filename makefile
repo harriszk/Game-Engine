@@ -6,3 +6,4 @@ run: Driver.class
 
 clean:
 	rm *.class
+	rm */*.class

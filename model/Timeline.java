@@ -1,4 +1,8 @@
+package model;
 import javax.swing.JPanel;
+
+import common.Recipient;
+
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -13,7 +17,7 @@ public class Timeline implements ActionListener {
     private int IDEALIZE_STEP_SIZE = 30; // per second
     private int current_step_size;
 
-    Scene scene;
+    Recipient client;
     Timer timer;
 
     Instant beginning, start, finish;
@@ -22,10 +26,10 @@ public class Timeline implements ActionListener {
 
     ChronoUnit chronounit = ChronoUnit.valueOf("MILLIS");
 
-    public Timeline(Scene s)
+    public Timeline(Recipient r)
     {
-        System.out.println("Timeline created...");
-        this.scene = s;
+        System.out.println("New timeline created...");
+        this.client = r;
         this.timer = new Timer(1000 / this.IDEALIZE_STEP_SIZE, this);
         this.timer.start();
         beginning = this.clock.instant();
@@ -38,8 +42,9 @@ public class Timeline implements ActionListener {
         delta_t = start.until(finish, this.chronounit);
         start = finish;
 
-        this.scene.repaint();
+        this.client.timesUp();
         //this.scene.debugger.setText("Total: " + (float)(beginning.until(finish, chronounit) * 0.001) + "s --- dt: " + delta_t + "ms");
+        //System.out.println("Total: " + (float)(beginning.until(finish, chronounit) * 0.001) + "s --- dt: " + delta_t + "ms");
     } // end actionPerformed
 
     public void play()

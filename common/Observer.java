@@ -1,9 +1,10 @@
+package common;
 /**
  * Observer.java
  * 
  * 
  */
 
-interface Observer {
+public interface Observer {
     public void update(Subject s);
 }

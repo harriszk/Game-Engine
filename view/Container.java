@@ -1,3 +1,4 @@
+package view;
 /**
  * Container.java
  * 
@@ -8,6 +9,9 @@
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import common.Subject;
+
 import java.awt.Color;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +21,7 @@ public class Container {
     private int width = 640;
     private int height = 480;
 
-    Container(){
+    public Container(){
         this.frame = new JFrame();
 
         this.frame.setTitle("Zachary's Game Engine");

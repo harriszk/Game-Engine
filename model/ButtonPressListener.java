@@ -1,3 +1,4 @@
+package model;
 /**
  * ButtonPressListener.java
  * 
@@ -9,6 +10,9 @@
  */
 
 import java.awt.event.ActionListener;
+
+import view.Scene;
+
 import java.awt.event.ActionEvent;
 
 public class ButtonPressListener implements ActionListener {
@@ -21,20 +25,20 @@ public class ButtonPressListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e)
     {
-        System.out.println(e.getActionCommand() + " button was pressed");
+        //System.out.println(e.getActionCommand() + " button was pressed");
 
         switch(e.getActionCommand())
         {
             case "Pause":
                 if(this.scene.on){
                     this.scene.pause();
-                    //pause_button.setText("Play");
-                    this.scene.on = false;
-                } else {
-                    this.scene.play();
-                    //pause_button.setText("Pause");
-                    this.scene.on = true;
                 }
+                break;
+            case "Play":
+                if(this.scene.on){
+                    this.scene.play();
+                }
+                break;
         }
     }
 } // end ButtonPressListener

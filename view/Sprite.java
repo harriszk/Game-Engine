@@ -1,3 +1,4 @@
+package view;
 /**
  * Sprite.java
  * 
@@ -23,7 +24,7 @@ import javax.imageio.ImageIO;
 public class Sprite extends JPanel {
     // Attributes
     private int[] size = {0, 0};
-    private int[] position = {250, 250};
+    private double[] position = {0, 0};
     private double image_angle = 0;
     private double move_angle = 0;
     private int speed = 0;
@@ -38,14 +39,14 @@ public class Sprite extends JPanel {
     private ImageIcon img;
 
     // Methods
-    public Sprite(Scene scene, int width, int height)
+    public Sprite(Scene scene, int x, int y)
     {
         this.scene = scene;
-        this.size[0] = width;
-        this.size[1] = height;
-        img = new ImageIcon("/Users/zachary/Desktop/Intro to Game Graphics/Game-Engine/checkerboard.gif");
-        System.out.println(this.img.getIconWidth());
-        System.out.println(this.img.getIconHeight());
+        this.position[0] = x;
+        this.position[1] = y;
+        //img = new ImageIcon("/Users/zachary/Desktop/Intro to Game Graphics/Game-Engine/checkerboard.gif");
+        //System.out.println(this.img.getIconWidth());
+        //System.out.println(this.img.getIconHeight());
         /*
         try {
             this.image = ImageIO.read(new File(imagePath));
@@ -55,16 +56,10 @@ public class Sprite extends JPanel {
         */
     } // end constructor
 
-    /* 
-    public void paintComponent(Graphics g){
-        g.setColor(new Color(145, 151, 156));
-        g.drawOval(this.position[0], this.position[1], this.size, this.size);
-        g.fillOval(this.position[0], this.position[1], this.size, this.size);
-        //this.position[0]++;
-        //this.position[1]++;
-        //System.out.println("HERE");
-    } // end paintComponent
-    */
+    public double getPosition(int index)
+    {
+        return this.position[index];
+    }
 
     public void setImage()
     {
@@ -84,10 +79,10 @@ public class Sprite extends JPanel {
         super.paintComponent(g);
 
         // These coordinates account for where we want the geometric center to be.
-        int transformed_x = this.position[0] - (this.img.getIconWidth() / 2);
-        int transformed_y = this.position[1] - (this.img.getIconHeight() / 2);
+        //int transformed_x = this.position[0] - (this.img.getIconWidth() / 2);
+        //int transformed_y = this.position[1] - (this.img.getIconHeight() / 2);
 
-        g.drawImage(img.getImage(), transformed_x, transformed_y, this);
+        //g.drawImage(img.getImage(), transformed_x, transformed_y, this);
         //g.drawRect(this.position[0], this.position[1], this.size[0], this.size[1]);
         //g.drawImage(image, this.position[0], this.position[1], this);
 
@@ -98,7 +93,7 @@ public class Sprite extends JPanel {
         */
     } // end draw
 
-    public void setPosition(int x, int y)
+    public void setPosition(double x, double y)
     {
         this.position[0] = x;
         this.position[1] = y;
@@ -107,9 +102,24 @@ public class Sprite extends JPanel {
     // This should be done independently of the frame rate
     // to ensure that the distance an object travels is the 
     // same reguardless if there is a faster or slower frame rate.
-    public void update()
+    public void update(double dt)
     {
-        setPosition(this.position[0] + 1, this.position[1]);
+        //setPosition(this.position[0] + dt * 0.001, this.position[1] - dt * 0.001);
+        // Reference: https://www.physicsforums.com/threads/cool-parametric-equations.863611/
+        // x(t) = (a - b) cos t + c cos ((a/b - 1)t) 
+        // y(t) = (a - b) sin t + c sin ((a/b - 1)t)
+    
+        double a = 0, b = 13, c = 6;
+
+        // Circle (y(t) = <sin(t), cos(t)>)
+        // double x = Math.sin(dt % 2 * Math.PI);
+        // double y = Math.cos(dt % 2 * Math.PI);
+
+        double x = ((a - b) * Math.cos(dt)) + (c * Math.cos(((a / b) - 1) * dt));
+        double y = ((a - b) * Math.sin(dt)) + (c * Math.sin(((a / b) - 1) * dt));;
+
+        setPosition(x, y);
+        //System.out.println(dt + ": <" + this.position[0] + "," + this.position[1] + ">");
     } // end update
 
     // 
@@ -150,10 +160,7 @@ public class Sprite extends JPanel {
 
     public void checkBounds()
     {
-        if(this.position[0] > 640)
-        {
-            this.position[0] = 0;
-        }
+
     } // end checkBounds
 
     public boolean collidesWith(Sprite s)
