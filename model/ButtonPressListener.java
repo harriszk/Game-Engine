@@ -25,19 +25,15 @@ public class ButtonPressListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e)
     {
-        //System.out.println(e.getActionCommand() + " button was pressed");
+        System.out.println(e.getActionCommand() + " button was pressed");
 
         switch(e.getActionCommand())
         {
             case "Pause":
-                if(this.scene.on){
-                    this.scene.pause();
-                }
+                this.scene.pause();
                 break;
             case "Play":
-                if(this.scene.on){
-                    this.scene.play();
-                }
+                this.scene.play();
                 break;
         }
     }

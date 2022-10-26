@@ -16,6 +16,7 @@ import common.Recipient;
 import common.Subject;
 import model.ButtonPressListener;
 import model.CoordinateSystem;
+import model.KeyboardListener;
 import model.Timeline;
 
 import java.awt.Graphics;
@@ -36,27 +37,25 @@ public class Scene extends JPanel implements Observer, Recipient {
     // Attributes
     private int SCREEN_WIDTH;
     private int SCREEN_HEIGHT;
-    private int STEP_SIZE = 2;
-    private JSlider zoom;
-    private ArrayList<Sprite> sprites;
-    private Timeline main_timeline;
-
-    private CoordinateSystem coords;
-    public boolean on = true;
-    private boolean moving = false;
     private int MOUSE_START_X;
     private int MOUSE_START_Y;
-
+    private ArrayList<Sprite> sprites;
     private Subject subject;
+    private boolean moving = false;
 
+    // Space and Time 
+    private CoordinateSystem coords;
+    private Timeline main_timeline;
+    
+    // Visual Assets and Listeners
+    private JSlider zoom;
+    private JButton play_pause_button = new JButton("Pause");
+    public JLabel debugger;
     private ButtonPressListener listener = new ButtonPressListener(this);
 
-    public JLabel debugger;
-    private JButton pause_button = new JButton("Pause");
-    int counter = 0;
-
-    
-    private int position = 0;
+    /* Misc:
+     *     private int STEP_SIZE = 2;
+     */
 
     // Methods
     public Scene(int width, int height, Subject subject)
@@ -66,36 +65,37 @@ public class Scene extends JPanel implements Observer, Recipient {
         this.SCREEN_WIDTH = width;
         this.SCREEN_HEIGHT = height;
         this.subject = subject;
-        this.setBackground(new Color(145, 151, 156));
+        this.setPreferredSize(new Dimension(this.SCREEN_WIDTH, this.SCREEN_HEIGHT));
+        this.setBackground(Color.WHITE);
 
+        // Timeline for the main scene (i.e. drawing a frame to the screen)
         main_timeline = new Timeline(this);
         
         coords = new CoordinateSystem(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
 
         subject.register(this);
         subject.register(coords);
-
-
-        this.pause_button.addActionListener(this.listener);
         
         debugger = new JLabel();
-        this.add(debugger);
-        this.add(pause_button);
-
         zoom = new JSlider();
+
+        // Add visuals to the scene
+        this.add(debugger);
+        //this.add(play_pause_button);
         this.add(zoom);
 
-        //this.setPreferredSize(new Dimension(this.SCREEN_WIDTH, this.SCREEN_HEIGHT));
+        this.play_pause_button.addActionListener(this.listener);
 
+        // Test sprite(s)
         sprites = new ArrayList<Sprite>();
         sprites.add(new Sprite(this, 0, 0));
     } // end constructor
 
     public void paintComponent(Graphics g){
+        // Query the coordinate system for where things should be drawn.
         super.paintComponent(g);
 
         // --- BEGIN DRAWING COORDINATE SYSTEM ---
-        // Query the coordinate system for where  things should be drawn.
         this.coords.updateDivisions();
 
         if(moving)
@@ -150,37 +150,6 @@ public class Scene extends JPanel implements Observer, Recipient {
         {
             drawSprite(sprite, g);
         } // end for
-        
-        
-        /* 
-
-        // This adjusts the zoom, we are just incresing or decreasing the step size
-        //this.STEP_SIZE = (int)(40 * ((double)zoom.getValue() / (double)50)) + 10;
-        //System.out.println("Zoom value: " + this.STEP_SIZE);
-
-        //coords.updateZoom((int)(40 * ((double)zoom.getValue() / (double)50)) + 10);
-
-        for (Sprite sprite : sprites) 
-        {
-            sprite.update(time.beginning.until(time.finish, time.chronounit) * 0.001);
-            coords.drawSprite(sprite, g);
-        } // end for
-        */
-
-
-
-        //g.setColor(new Color(0xFF, 0xFF, 0xFF));
-        //position += (int)(640 * delta_t * 0.001);
-        
-        //System.out.println("<" + position + ",50> @ " + (delta_t * 0.001));
-        //int t = (int)(640 * time.beginning.until(time.finish, time.chronounit) * 0.001);
-        //System.out.println("t = " + t);
-        //g.fillOval(t / 2 % this.SCREEN_WIDTH, t / 2 % this.SCREEN_HEIGHT, 20, 20);
-        //g.fillRect(75, this.position, 50, 50);
-
-        
-        
-        //System.out.println("Repainting scene.");
     } // end paintComponent
 
     private void drawAxes(double global_unit, int axis, Graphics g)
@@ -265,7 +234,7 @@ public class Scene extends JPanel implements Observer, Recipient {
         Point p = MouseInfo.getPointerInfo().getLocation();
         this.MOUSE_START_X = (int)p.getX();
         this.MOUSE_START_Y = (int)p.getY();
-    }
+    } // end update
 
     public void timesUp()
     {
@@ -280,20 +249,22 @@ public class Scene extends JPanel implements Observer, Recipient {
     public void play()
     {
         this.coords.play();
-        pause_button.setText("Pause");
+        play_pause_button.setText("Pause");
     } // end play
 
     public void pause()
     {
         this.coords.pause();
-        pause_button.setText("Play");
+        play_pause_button.setText("Play");
     } // end pause
 
+    // Clears all sprites from the screen
     public void clear()
     {
 
     } // end clear
 
+    // Shows/Hides the cursor when it's over the scene
     public void toggleCursor()
     {
 

@@ -116,8 +116,8 @@ public class Sprite extends JPanel {
         
 
         // Ellipse (gamma(t) = <h + asin(t), k + bcos(t)>)
-        x = h + a * Math.sin(t % (2 * Math.PI));
-        y = k + b * Math.cos(t % (2 * Math.PI));
+        //x = h + a * Math.sin(t % (2 * Math.PI));
+        //y = k + b * Math.cos(t % (2 * Math.PI));
 
         //double x = r * (t - Math.sin(t));
         //double y = r * (1 - Math.cos(t));
@@ -131,6 +131,8 @@ public class Sprite extends JPanel {
         //y = (a * Math.sin(t)) % (4 * Math.PI);
 
 
+        x = (t/4) * ((t/4) + 1);
+        y = 2 * (t/4) - 1;
 
         this.setPosition(x, y);
         //System.out.println(dt + ": <" + this.position[0] + "," + this.position[1] + ">");

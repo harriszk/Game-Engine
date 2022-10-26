@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import common.Subject;
+import model.KeyboardListener;
 
 import java.awt.Color;
 import java.awt.*;
@@ -28,15 +29,21 @@ public class Container {
         this.frame.setSize(this.width, this.height);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setLocationRelativeTo(null);
+        this.frame.setFocusable(true);
+        this.frame.requestFocus();
 
         // Listens for a change to the window size
         Subject s = new Subject();
         this.frame.addMouseListener(s);
         this.frame.addComponentListener(s);
+        this.frame.addKeyListener(new KeyboardListener());
         
         Scene gameScene = new Scene(this.width, this.height, s);
         this.frame.add(gameScene);
 
+
+        
+        
 
         //s.register(gameScene);
 
@@ -46,7 +53,7 @@ public class Container {
 
 
 
-        //this.frame.pack();
+        this.frame.pack();
     } // end constructor
 
     public void start(){
