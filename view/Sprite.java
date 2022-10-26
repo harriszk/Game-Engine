@@ -17,43 +17,35 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.image.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
 public class Sprite extends JPanel {
     // Attributes
-    private int[] size = {0, 0};
+    private int width, height;
     private double[] position = {0, 0};
     private double image_angle = 0;
     private double move_angle = 0;
     private int speed = 0;
-    private int[] velocity = {0, 0};
-    private int[] acceleration = {0, 0};
-    private Scene scene;
+    private double[] velocity = {0.001, 0.001};
+    private double[] acceleration = {0, -0.0001};
     private String bound_action = "NOTHING";
     private boolean visible = true;
 
-
-    private BufferedImage image;
-    private ImageIcon img;
+    private ImageIcon image;
 
     // Methods
-    public Sprite(Scene scene, int x, int y)
+    public Sprite(int width, int height)
     {
-        this.scene = scene;
-        this.position[0] = x;
-        this.position[1] = y;
-        //img = new ImageIcon("/Users/zachary/Desktop/Intro to Game Graphics/Game-Engine/checkerboard.gif");
-        //System.out.println(this.img.getIconWidth());
-        //System.out.println(this.img.getIconHeight());
-        /*
-        try {
-            this.image = ImageIO.read(new File(imagePath));
-        } catch (IOException e) {
-
-        }
-        */
+        this.width = width;
+        this.height = height;
+        image = new ImageIcon("images/missing_image.jpeg");
+        //System.out.println(this.image.getIconWidth());
+        //System.out.println(this.image.getIconHeight());
     } // end constructor
 
     public double getPosition(int index)
@@ -61,10 +53,29 @@ public class Sprite extends JPanel {
         return this.position[index];
     }
 
-    public void setImage()
+    public ImageIcon getSpriteImageIcon()
     {
+        return this.image;
+    }
 
-    } // end setImage
+    public int getWidth()
+    {
+        return this.width;
+    }
+
+    public int getHeight()
+    {
+        return this.height;
+    }
+
+    public void setImage(String image_location)
+    {
+        Path path = Paths.get(image_location);
+        if(Files.exists(path))
+        {
+            this.image = new ImageIcon(image_location);
+        }
+    }
 
     public void draw(double global_time, Graphics g)
     {
@@ -79,10 +90,10 @@ public class Sprite extends JPanel {
         super.paintComponent(g);
 
         // These coordinates account for where we want the geometric center to be.
-        //int transformed_x = this.position[0] - (this.img.getIconWidth() / 2);
-        //int transformed_y = this.position[1] - (this.img.getIconHeight() / 2);
+        //int transformed_x = this.position[0] - (this.image.getIconWidth() / 2);
+        //int transformed_y = this.position[1] - (this.image.getIconHeight() / 2);
 
-        //g.drawImage(img.getImage(), transformed_x, transformed_y, this);
+        //g.drawImage(image.getImage(), transformed_x, transformed_y, this);
         //g.drawRect(this.position[0], this.position[1], this.size[0], this.size[1]);
         //g.drawImage(image, this.position[0], this.position[1], this);
 
@@ -102,10 +113,10 @@ public class Sprite extends JPanel {
     // This should be done independently of the frame rate
     // to ensure that the distance an object travels is the 
     // same reguardless if there is a faster or slower frame rate.
-    public void update(double t)
+    public void update(double dt)
     {
         double x, y;
-        double a = 1, b = 0.5, c = 0.75, h = 0, k = 0, r = 2;
+        double a = 1, b = 0.5, c = 0.75, h = 0, k = 0, r = 2, n = 4;
         //setPosition(this.position[0] + dt * 0.001, this.position[1] - dt * 0.001);
         // Reference: https://www.physicsforums.com/threads/cool-parametric-equations.863611/
         // Epicycloid
@@ -119,6 +130,10 @@ public class Sprite extends JPanel {
         //x = h + a * Math.sin(t % (2 * Math.PI));
         //y = k + b * Math.cos(t % (2 * Math.PI));
 
+        // Limaçon trisectrix
+        //x = a * (1 + Math.cos(t) + Math.cos(2 * t));
+        //y = a * (1 + Math.sin(t) + Math.sin(2 * t));
+
         //double x = r * (t - Math.sin(t));
         //double y = r * (1 - Math.cos(t));
 
@@ -131,22 +146,31 @@ public class Sprite extends JPanel {
         //y = (a * Math.sin(t)) % (4 * Math.PI);
 
 
-        x = (t/4) * ((t/4) + 1);
-        y = 2 * (t/4) - 1;
+        //x = (t/4) * ((t/4) + 1);
+        //y = 2 * (t/4) - 1;
+
+        this.velocity[0] = this.velocity[0] + this.acceleration[0] * dt * 0.001;
+        this.velocity[1] = this.velocity[1] + this.acceleration[1] * dt * 0.001;
+
+        x = this.position[0] + this.velocity[0] * dt;
+        y = this.position[1] + this.velocity[1] * dt;
+        
+
 
         this.setPosition(x, y);
+
+        checkBounds();
         //System.out.println(dt + ": <" + this.position[0] + "," + this.position[1] + ">");
     } // end update
 
-    // 
     public void toggleVisibility()
     {
         visible = !visible;
     } // end toggleVisibility
 
-    public void setSpeed()
+    public void setSpeed(int speed)
     {
-        
+        this.speed = speed;
     } // end setSpeed
 
     public void setImageAngle(double theta)
@@ -169,14 +193,26 @@ public class Sprite extends JPanel {
 
     } // end addForce
 
-    public void setBoundAction()
+    public void setBoundAction(String action)
     {
-
+        this.bound_action = action;
     } // end setBoundAction
 
     public void checkBounds()
     {
-
+        switch(this.bound_action)
+        {
+            case "NOTHING":
+                if(this.position[0] > 1 || this.position[1] > 5)
+                {
+                    this.position[0] = 0;
+                    this.position[1] = 0;
+                }
+                break;
+            default:
+                System.out.println("Unrecognized or no bound action set.");
+                break;
+        } // end switch
     } // end checkBounds
 
     public boolean collidesWith(Sprite s)
@@ -204,7 +240,12 @@ public class Sprite extends JPanel {
     // Returned value will be in the interval [0, pi]
     public double angleTo(Sprite s)
     {
-        double angle = -1;
+        double angle = -1, dx, dy;
+
+        dx = this.position[0] - s.position[0];
+        dy = this.position[1] - s.position[1];
+
+        angle = Math.atan2(dy, dx);
 
         return angle;
     } // end angleTo

@@ -18,6 +18,7 @@ public class CoordinateSystem implements Observer, Recipient {
     private int Y_OFFSET;
     private float t;
     private int[] divisions = {0, 0, 0};
+    private boolean paused = false;
 
     // Methods
     public CoordinateSystem(int width, int height)
@@ -38,11 +39,13 @@ public class CoordinateSystem implements Observer, Recipient {
     public void play()
     {
         sprite_timeline.play();
+        paused = false;
     } // end play
 
     public void pause()
     {
         sprite_timeline.pause();
+        paused = true;
     } // end pause
 
     public void update(Subject s)
@@ -122,7 +125,7 @@ public class CoordinateSystem implements Observer, Recipient {
 
     public int getEndX(int x_0)
     {
-        return (this.SCREEN_WIDTH / this.UNIT_CONVERSION) + x_0 + 2;
+        return (this.SCREEN_WIDTH / this.UNIT_CONVERSION) + x_0 + 3;
     } // end getEndX
 
     public int getStartY()
@@ -132,11 +135,26 @@ public class CoordinateSystem implements Observer, Recipient {
 
     public int getEndY(int y_0)
     {
-        return (this.SCREEN_HEIGHT / this.UNIT_CONVERSION) + y_0 + 1;
+        return (this.SCREEN_HEIGHT / this.UNIT_CONVERSION) + y_0 + 3;
     } // end getEndY
+
+    public int getOffsetX()
+    {
+        return this.X_OFFSET;
+    }
+
+    public int getOffsetY()
+    {
+        return this.Y_OFFSET;
+    }
 
     public float getTime()
     {
         return this.t;
     } // end getTime
+
+    public float getDeltaTime()
+    {
+        return this.sprite_timeline.delta_t;
+    }
 } // end CoordinateSystem 

@@ -81,14 +81,15 @@ public class Scene extends JPanel implements Observer, Recipient {
 
         // Add visuals to the scene
         this.add(debugger);
-        //this.add(play_pause_button);
+        this.add(play_pause_button);
         this.add(zoom);
 
         this.play_pause_button.addActionListener(this.listener);
 
         // Test sprite(s)
         sprites = new ArrayList<Sprite>();
-        sprites.add(new Sprite(this, 0, 0));
+        sprites.add(new Sprite(50, 50));
+        sprites.get(0).setImage("images/checkerboard.gif");
     } // end constructor
 
     public void paintComponent(Graphics g){
@@ -117,6 +118,8 @@ public class Scene extends JPanel implements Observer, Recipient {
         x_1 = this.coords.getEndX(x_0);
         y_0 = this.coords.getStartY();
         y_1 = this.coords.getEndY(y_0);
+
+        // TODO: Fix how interval is choosen in x and y. Wonky when we are near the x- and y-axes!
 
         for(int i = x_0; i < x_1; i++)
         {
@@ -178,9 +181,17 @@ public class Scene extends JPanel implements Observer, Recipient {
         switch(axis){
             case 0:
                 g.drawLine(pixel_value, 0, pixel_value, this.SCREEN_HEIGHT);
+                g.setColor(Color.WHITE);
+                g.fillRect(pixel_value - 5, this.coords.getOffsetY() + 5, 10, 17);
+                g.setColor(Color.BLACK);
+                g.drawString("" + (int)global_unit, pixel_value - 4, this.coords.getOffsetY() + 18);
                 break;
             case 1:
                 g.drawLine(0, pixel_value, this.SCREEN_WIDTH, pixel_value);
+                g.setColor(Color.WHITE);
+                g.fillRect(this.coords.getOffsetX() - 20, pixel_value - 8, 17, 17);
+                g.setColor(Color.BLACK);
+                g.drawString("" + (int)global_unit, this.coords.getOffsetX() - 20, pixel_value + 5);
                 break;
             default:
                 break;
@@ -218,11 +229,10 @@ public class Scene extends JPanel implements Observer, Recipient {
     private void drawSprite(Sprite s, Graphics g)
     {
         int x = 0, y = 0;
-        s.update(this.coords.getTime());
+        s.update(this.coords.getDeltaTime());
         x = (int)(this.coords.convertPositionX(s.getPosition(0)));
         y = (int)(this.coords.convertPositionY(s.getPosition(1)));
-        g.setColor(Color.BLUE);
-        g.fillOval(x - 10, y - 10, 20, 20);
+        g.drawImage(s.getSpriteImageIcon().getImage(), x - (s.getWidth() / 2), y - (s.getHeight() / 2), s.getWidth(), s.getHeight(), s);
     } // end drawSprite
 
     public void update(Subject s)
