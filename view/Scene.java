@@ -25,13 +25,8 @@ import java.util.ArrayList;
 import java.awt.Color;
 import javax.swing.*;
 import java.awt.event.*;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.awt.MouseInfo;
 import java.awt.Point;
-
-import java.io.FileWriter;   // Import the FileWriter class
-import java.io.IOException;  // Import the IOException class to handle errors
 
 public class Scene extends JPanel implements Observer, Recipient {
     // Attributes
@@ -40,7 +35,6 @@ public class Scene extends JPanel implements Observer, Recipient {
     private int MOUSE_START_X;
     private int MOUSE_START_Y;
     private ArrayList<Sprite> sprites;
-    private Subject subject;
     private boolean moving = false;
 
     // Space and Time 
@@ -64,7 +58,6 @@ public class Scene extends JPanel implements Observer, Recipient {
 
         this.SCREEN_WIDTH = width;
         this.SCREEN_HEIGHT = height;
-        this.subject = subject;
         this.setPreferredSize(new Dimension(this.SCREEN_WIDTH, this.SCREEN_HEIGHT));
         this.setBackground(Color.WHITE);
 
@@ -90,6 +83,7 @@ public class Scene extends JPanel implements Observer, Recipient {
         sprites = new ArrayList<Sprite>();
         sprites.add(new Sprite(50, 50));
         sprites.get(0).setImage("images/checkerboard.gif");
+        subject.register(sprites.get(0));
     } // end constructor
 
     public void paintComponent(Graphics g){
@@ -151,7 +145,8 @@ public class Scene extends JPanel implements Observer, Recipient {
 
         for (Sprite sprite : sprites) 
         {
-            drawSprite(sprite, g);
+            //drawSprite(sprite, g);
+            sprite.draw(0.1, g);
         } // end for
     } // end paintComponent
 
